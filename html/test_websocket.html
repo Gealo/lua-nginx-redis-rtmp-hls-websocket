@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>弹幕测试页面</title>
+    <style>
+        #text {
+            resize : none;
+            width : 400px;
+            height : 600px;
+            box-sizing : border-box;
+        }
+        #mesage {
+            width : 400px;
+            box-sizing : border-box;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            websocket = new WebSocket("ws://127.0.0.1:80/live/websocket");
+            websocket.onopen = function() {
+
+            }
+            websocket.onmessage = function (evt) {
+                var msg = evt.data;
+                console.log(msg);
+                document.getElementById("text").innerHTML += msg;
+            }
+            websocket.onerror = function (evt) {
+                console.log(evt);
+            }
+        }
+        function submit() {
+            var json = {
+                session_id : "",
+                user_id : "",
+                text : document.getElementById("message").value
+            }
+            var Val = document.getElementById("message").value
+            websocket.send(Val);
+        }
+    </script>
+</head>
+<body>
+    <textarea id="text"></textarea> <br />
+    <input id="message" type="text" placeholder="请输入弹幕" /> <br />
+    <input id="submit" type="submit" value="发送" onclick="submit()" /> <br />
+</body>
+</html>
